@@ -35,6 +35,7 @@ def updateBranch(branch: str)->None:
 
 def validBranches(branch1: str, branch2: str)->bool:
     if(branch1 == branch2):
+        print("Cannot have parentBranch == childBranch")
         return False
     
     return True
@@ -60,6 +61,7 @@ if __name__ == "__main__":
     try:
         updateBranch(parentBranch)
         updateBranch(childBranch)
+        print(f"NOTE: You are now on {childBranch}")
     except:
         exit()
 
