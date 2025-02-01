@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 BRANCH_NOT_ON_REMOTE = 128
 SUCCESS_RESPONSE = 0
@@ -32,15 +33,27 @@ def updateBranch(branch: str)->None:
     
     print(f"Update complete!")
 
-
+def validBranches(branch1: str, branch2: str)->bool:
+    if(branch1 == branch2):
+        return False
+    
+    return True
 
 if __name__ == "__main__":
-    parentBranch = input("Input parent branch that you want to merge down from: ").strip()
+
+    if len(sys.argv) < 3 :
+        print("Missing argument(s). Use command like this: python3 /path/to/script/main.py parentBranch childBranch")
+        exit()
+
+    parentBranch = sys.argv[1]
+    childBranch  = sys.argv[2]
+
+    if(not validBranches(parentBranch, childBranch)):
+        exit()
+
     if(not branchIsOnRemote(parentBranch)):
         exit()
 
-
-    childBranch = input("Input child branch which will receive the merge down: ").strip()
     if(not branchIsOnRemote(childBranch)):
         exit()
 
