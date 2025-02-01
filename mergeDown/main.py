@@ -1,6 +1,7 @@
 import subprocess
 
 BRANCH_NOT_ON_REMOTE = 128
+SUCCESS_RESPONSE = 0
 
 def branchIsOnRemote(branch: str)->bool:
     # Check if branch is valid
@@ -10,7 +11,7 @@ def branchIsOnRemote(branch: str)->bool:
         print(f"{branch} does not exist on remote")
         return False
 
-    if (process.returncode != 0):
+    if (process.returncode != SUCCESS_RESPONSE):
         print(f"Something went terribly wrong when checking {branch} existance")
         return False 
     
@@ -21,13 +22,13 @@ def updateBranch(branch: str)->bool:
 
     process = subprocess.run(["git", "checkout", branch] , stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    if (process.returncode != 0):
+    if (process.returncode != SUCCESS_RESPONSE):
         print(f"ERROR: could not checkout to {branch}")
         return False
 
     process = subprocess.run(["git", "pull"] , stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    if (process.returncode != 0):
+    if (process.returncode != SUCCESS_RESPONSE):
         print(f"ERROR: could not git pull on {branch}")
         return False
     
@@ -35,22 +36,25 @@ def updateBranch(branch: str)->bool:
 
     return True
 
-parentBranch = input("Input parent branch that you want to merge down from: ").strip()
-if(not branchIsOnRemote(parentBranch)):
-    exit()
 
 
-childBranch = input("Input child branch which will receive the merge down: ").strip()
-if(not branchIsOnRemote(childBranch)):
-    exit()
-
-if(not updateBranch(parentBranch)):
-    exit()
-
-if(not updateBranch(childBranch)):
-    exit()
+if __name__ == "__main__":
+    parentBranch = input("Input parent branch that you want to merge down from: ").strip()
+    if(not branchIsOnRemote(parentBranch)):
+        exit()
 
 
-process = subprocess.run(["git", "merge", parentBranch])
+    childBranch = input("Input child branch which will receive the merge down: ").strip()
+    if(not branchIsOnRemote(childBranch)):
+        exit()
 
-print("Merge done, do not forget to git push!")
+    if(not updateBranch(parentBranch)):
+        exit()
+
+    if(not updateBranch(childBranch)):
+        exit()
+
+
+    process = subprocess.run(["git", "merge", parentBranch])
+
+    print("Merge done, do not forget to git push!")
