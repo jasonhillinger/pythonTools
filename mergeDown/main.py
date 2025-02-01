@@ -17,24 +17,20 @@ def branchIsOnRemote(branch: str)->bool:
     
     return True
 
-def updateBranch(branch: str)->bool:
+def updateBranch(branch: str)->None:
     print(f"Updating {branch} ...")
 
     process = subprocess.run(["git", "checkout", branch] , stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if (process.returncode != SUCCESS_RESPONSE):
-        print(f"ERROR: could not checkout to {branch}")
-        return False
+        raise Exception(f"ERROR: could not checkout to {branch}")
 
     process = subprocess.run(["git", "pull"] , stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if (process.returncode != SUCCESS_RESPONSE):
-        print(f"ERROR: could not git pull on {branch}")
-        return False
+        raise Exception(f"ERROR: could not git pull on {branch}")
     
     print(f"Update complete!")
-
-    return True
 
 
 
@@ -48,11 +44,12 @@ if __name__ == "__main__":
     if(not branchIsOnRemote(childBranch)):
         exit()
 
-    if(not updateBranch(parentBranch)):
+    try:
+        updateBranch(parentBranch)
+        updateBranch(childBranch)
+    except:
         exit()
 
-    if(not updateBranch(childBranch)):
-        exit()
 
 
     process = subprocess.run(["git", "merge", parentBranch])
