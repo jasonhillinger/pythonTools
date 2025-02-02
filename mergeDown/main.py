@@ -46,8 +46,8 @@ if __name__ == "__main__":
         print("Missing argument(s). Use command like this: python3 /path/to/script/main.py parentBranch childBranch")
         exit()
 
-    parentBranch = sys.argv[1]
-    childBranch  = sys.argv[2]
+    parentBranch = sys.argv[1].strip()
+    childBranch  = sys.argv[2].strip()
 
     if(not validBranches(parentBranch, childBranch)):
         exit()
